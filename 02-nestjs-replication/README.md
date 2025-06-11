@@ -1,18 +1,3 @@
-🔥 Siap bro! Ini dia `README.md` **bahasa Inggris**, clean dan jelas untuk direktori `02-nestjs-replication`, lengkap dengan:
-
-* 💡 Deskripsi
-* ⚙️ Fitur
-* 🐳 Docker instructions
-* 🔌 DB replication context
-* 🚀 Benchmark script support
-
-Langsung tinggal copy-paste.
-
----
-
-### 📄 `02-nestjs-replication/README.md`
-
-```md
 # 🚀 NestJS Replication Demo App
 
 This project is a simple NestJS API designed to demonstrate integration with a PostgreSQL master-slave replication setup. It includes basic CRUD endpoints and supports read/write routing between master and slave using TypeORM.
