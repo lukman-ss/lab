@@ -110,8 +110,3 @@ MIT — feel free to use, modify, or extend for your own database testing.
 Happy testing! 💥
 
 ```
-
----
-
-Kalau kamu mau ada badge GitHub Actions, test coverage, atau ERD diagram di atasnya, tinggal gue tambahin. Mau sekalian versi buat publish public repo juga?
-```
