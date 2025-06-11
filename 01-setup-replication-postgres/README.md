@@ -1,9 +1,4 @@
-﻿🔥 SIAP BRO. Let's clean it up — here's your **FINAL `README.md`**, 100% in **English**, formatted properly, fully consistent with your original intent, and ready for GitHub or any production use:
-
----
-
-````md
-# 🐘 PostgreSQL Master-Slave Replication with Docker Compose (Windows PowerShell)
+﻿# 🐘 PostgreSQL Master-Slave Replication with Docker Compose (Windows PowerShell)
 
 This guide sets up PostgreSQL streaming replication (master-slave) using Docker Compose, powered by the Bitnami PostgreSQL image. Perfect for development and load testing environments.
 
