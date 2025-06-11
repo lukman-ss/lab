@@ -108,5 +108,3 @@ MIT — feel free to use, modify, or extend for your own database testing.
 ---
 
 Happy testing! 💥
-
-```
