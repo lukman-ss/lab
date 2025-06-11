@@ -1,34 +1,42 @@
-﻿# PostgreSQL Master-Slave Replication with Docker Compose (Windows PowerShell)
-
-This guide walks through setting up a PostgreSQL streaming replication (master-slave) environment using Docker Compose on Windows PowerShell, leveraging the Bitnami PostgreSQL image for simplicity.
+﻿🔥 SIAP BRO. Let's clean it up — here's your **FINAL `README.md`**, 100% in **English**, formatted properly, fully consistent with your original intent, and ready for GitHub or any production use:
 
 ---
 
-## Prerequisites
+````md
+# 🐘 PostgreSQL Master-Slave Replication with Docker Compose (Windows PowerShell)
 
-* Windows with Docker and Docker Compose installed
-* PowerShell (as Administrator recommended)
-* Basic familiarity with Docker and PostgreSQL
+This guide sets up PostgreSQL streaming replication (master-slave) using Docker Compose, powered by the Bitnami PostgreSQL image. Perfect for development and load testing environments.
 
 ---
 
-## Directory Structure
+## ✅ Prerequisites
 
-text
-pg-replication/
+- Windows with **Docker** and **Docker Compose** installed
+- PowerShell or Git Bash
+- A Docker network named `lab-net` must be created:
+
+```bash
+docker network create lab-net
+````
+
+---
+
+## 📁 Directory Structure
+
+```
+01-setup-replication-postgres/
 ├── docker-compose.yml
-├── master_data/          ← Named volume mount for master data
-├── slave_data/           ← Named volume mount for slave data
-└── README.md             ← This file
-
-
-> **Note:** No additional configuration files are required—Bitnami handles initialization.
+├── README.md
+└── (data is stored in Docker volumes, not inside the project folder)
+```
 
 ---
 
-## docker-compose.yml
+## 🐳 docker-compose.yml
 
-yaml
+```yaml
+version: '3.8'
+
 services:
   pg-master:
     image: bitnami/postgresql:14
@@ -38,11 +46,12 @@ services:
       - POSTGRESQL_REPLICATION_USER=replicator
       - POSTGRESQL_REPLICATION_PASSWORD=example
       - POSTGRESQL_PASSWORD=example
-      - POSTGRESQL_DATABASE=postgres
     volumes:
       - master_data:/bitnami/postgresql
     ports:
       - '5432:5432'
+    networks:
+      - lab-net
 
   pg-slave:
     image: bitnami/postgresql:14
@@ -56,83 +65,92 @@ services:
       - POSTGRESQL_PASSWORD=example
       - POSTGRESQL_MASTER_HOST=pg-master
       - POSTGRESQL_MASTER_PORT_NUMBER=5432
-      - POSTGRESQL_DATABASE=postgres
     volumes:
       - slave_data:/bitnami/postgresql
     ports:
       - '5433:5432'
+    networks:
+      - lab-net
 
 volumes:
   master_data:
   slave_data:
 
+networks:
+  lab-net:
+    external: true
+```
 
 ---
 
-## Steps to Run
+## 🚀 How to Run
 
-1. **Clean up any existing setup** (optional):
+1. (Optional) Clean up any previous containers and volumes:
 
-   
-powershell
-   docker-compose down --remove-orphans -v
+```bash
+docker compose down -v
+```
 
+2. Start the replication cluster:
 
-2. **Bring up the master and slave**:
+```bash
+docker compose up -d
+```
 
-   
-powershell
-   docker-compose up -d
+3. Verify running containers:
 
+```bash
+docker ps --filter "name=pg-"
+```
 
-3. **Verify containers are running**:
+4. Check replication status on the master:
 
-   
-powershell
-   docker ps --filter "name=pg-"
+```bash
+docker exec -e PGPASSWORD=example -u postgres pg-master \
+  psql -h 127.0.0.1 -U postgres -d postgres \
+  -c "SELECT pid, state, client_addr FROM pg_stat_replication;"
+```
 
+5. Check recovery mode on the slave:
 
-4. **Check replication status on master**:
-
-   
-powershell
-   docker exec -e PGPASSWORD=example -u postgres pg-master psql \
-     -h 127.0.0.1 -U postgres -d postgres -c "SELECT pid, state, client_addr FROM pg_stat_replication;"
-
-
-5. **Check recovery mode on slave**:
-
-   
-powershell
-   docker exec -e PGPASSWORD=example -u postgres pg-slave psql \
-     -h 127.0.0.1 -U postgres -d postgres -c "SELECT pg_is_in_recovery();"
-
+```bash
+docker exec -e PGPASSWORD=example -u postgres pg-slave \
+  psql -h 127.0.0.1 -U postgres -d postgres \
+  -c "SELECT pg_is_in_recovery();"
+```
 
 ---
 
-## Usage
+## 🔗 Connection Info
 
-* Connect to **master** on localhost:5432 for read-write operations.
-* Connect to **slave** on localhost:5433 for read-only reports or load balancing.
-
----
-
-## Cleanup
-
-To stop and remove all resources, run:
-
-powershell
-docker-compose down -v
-
+* `localhost:5432` → write DB (pg-master)
+* `localhost:5433` → read-only DB (pg-slave)
 
 ---
 
-## Notes
+## 🧼 Cleanup
 
-* Default passwords are set to example for demo purposes—change them in production.
-* Bitnami images handle replication setup automatically via environment variables.
-* Logs can be viewed with docker logs pg-master and docker logs pg-slave.
+To stop and remove everything including volumes:
+
+```bash
+docker compose down -v
+```
 
 ---
 
-Happy replicating! 0🚀 
+## 📝 Notes
+
+* Passwords are set to `example` for demo purposes. Change them for production use.
+* Bitnami PostgreSQL images automatically configure replication via environment variables.
+* To view logs:
+
+```bash
+docker logs pg-master
+docker logs pg-slave
+```
+
+---
+
+Happy replicating! 🚀
+
+```
