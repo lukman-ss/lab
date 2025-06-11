@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./app
+    container_name: nest-api
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./app:/usr/src/app
+    environment:
+      DATABASE_HOST: pg-master
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: example
+      DATABASE_NAME: postgres
+      SLAVE_DB_HOST: pg-slave
+      SLAVE_DB_PORT: 5432
+      SLAVE_DB_USER: postgres
+      SLAVE_DB_PASSWORD: example
+      SLAVE_DB_NAME: postgres
+    command: npm run start:dev
+    networks:
+      - lab-net
+
+networks:
+  lab-net:
+    external: true
