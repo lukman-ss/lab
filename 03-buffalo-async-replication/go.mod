@@ -1,6 +1,6 @@
-module 03-buffalo-async-replication
+module github.com/lukman-ss/03-buffalo-async-replication
 
-go 1.24.4
+go 1.21
 
 require (
 	github.com/gobuffalo/buffalo v1.1.2
