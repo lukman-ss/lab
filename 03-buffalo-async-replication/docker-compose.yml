@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  postgre-sync-master:
+    image: bitnami/postgresql:14
+    container_name: postgre-sync-master
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=replicator
+      - POSTGRESQL_REPLICATION_PASSWORD=example
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=example
+      - POSTGRESQL_DATABASE=postgres
+    ports:
+      - '5432:5432'
+    networks:
+      - lab-aync-net
+    volumes:
+      - master_data:/bitnami/postgresql
+
+  postgre-sync-slave:
+    image: bitnami/postgresql:14
+    container_name: postgre-sync-slave
+    depends_on:
+      - postgre-sync-master
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_REPLICATION_USER=replicator
+      - POSTGRESQL_REPLICATION_PASSWORD=example
+      - POSTGRESQL_MASTER_HOST=postgre-sync-master
+      - POSTGRESQL_MASTER_PORT_NUMBER=5432
+      - POSTGRESQL_PASSWORD=example
+    ports:
+      - '5433:5432'
+    networks:
+      - lab-aync-net
+    volumes:
+      - slave_sync_data:/bitnami/postgresql
+
+  postgre-async-slave:
+    image: bitnami/postgresql:14
+    container_name: postgre-async-slave
+    depends_on:
+      - postgre-sync-master
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_REPLICATION_USER=replicator
+      - POSTGRESQL_REPLICATION_PASSWORD=example
+      - POSTGRESQL_MASTER_HOST=postgre-sync-master
+      - POSTGRESQL_MASTER_PORT_NUMBER=5432
+      - POSTGRESQL_PASSWORD=example
+    ports:
+      - '5434:5432'
+    networks:
+      - lab-aync-net
+    volumes:
+      - slave_async_data:/bitnami/postgresql
+
+  buffalo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: buffalo
+    ports:
+      - '3000:3000'
+    networks:
+      - lab-aync-net
+    volumes:
+      - buffalo_data:/app
+    working_dir: /app
+
+volumes:
+  master_data:
+  slave_sync_data:
+  slave_async_data:
+  buffalo_data:
+
+networks:
+  lab-aync-net:
+    driver: bridge
