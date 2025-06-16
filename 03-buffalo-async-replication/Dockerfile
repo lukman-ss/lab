@@ -1,4 +1,3 @@
-# This is a multi-stage Dockerfile and requires >= Docker 17.05
 FROM gobuffalo/buffalo:v0.18.14 as builder
 
 ENV GOPROXY http://proxy.golang.org
@@ -21,9 +20,9 @@ FROM alpine
 RUN apk add --no-cache bash
 RUN apk add --no-cache ca-certificates
 
-WORKDIR /bin/
+WORKDIR /app
 
-COPY --from=builder /bin/app .
+COPY --from=builder /bin/app /bin/app
 COPY entrypoint.sh /bin/entrypoint.sh
 RUN chmod +x /bin/entrypoint.sh
 
@@ -31,4 +30,4 @@ ENV ADDR=0.0.0.0
 
 EXPOSE 3000
 
-CMD ["./entrypoint.sh"]
+CMD ["/bin/entrypoint.sh"]

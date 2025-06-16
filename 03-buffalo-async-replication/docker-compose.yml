@@ -72,7 +72,7 @@ services:
     working_dir: /app
     environment:
       - DATABASE_URL=postgres://postgres:example@postgre-sync-master:5432/postgres?sslmode=disable
-    command: ./entrypoint.sh
+    command: /bin/entrypoint.sh
 
 volumes:
   master_data:
