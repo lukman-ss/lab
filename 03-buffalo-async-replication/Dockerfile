@@ -1,4 +1,4 @@
-# Stage 1: Builder
+# Stage 1: Frontend (optional for yarn usage)
 FROM node:18 AS frontend
 
 WORKDIR /src/app
@@ -9,22 +9,20 @@ COPY .yarnrc.yml ./
 
 RUN yarn install
 
-# Stage 2: Go build
+# Stage 2: Buffalo builder
 FROM gobuffalo/buffalo:v0.18.14 AS builder
 
+WORKDIR /src/app
 ENV GOPROXY=http://proxy.golang.org
 
-WORKDIR /src/app
-
 COPY --from=frontend /src/app /src/app
-
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 RUN buffalo build --static -o /bin/app
 
-# Final stage
+# Stage 3: Final runtime container
 FROM alpine
 
 RUN apk add --no-cache bash ca-certificates postgresql-client
