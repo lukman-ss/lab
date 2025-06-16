@@ -1,24 +1,33 @@
-FROM gobuffalo/buffalo:v0.18.14 as builder
+# Stage 1: Builder
+FROM node:18 AS frontend
 
-ENV GOPROXY http://proxy.golang.org
+WORKDIR /src/app
 
-RUN mkdir -p /src/03-buffalo-async-replication
-WORKDIR /src/03-buffalo-async-replication
+COPY package.json yarn.lock ./
+COPY .yarn .yarn
+COPY .yarnrc.yml ./
 
-ADD package.json .
-ADD yarn.lock .
 RUN yarn install
 
-COPY go.mod go.mod
-COPY go.sum go.sum
+# Stage 2: Go build
+FROM gobuffalo/buffalo:v0.18.14 AS builder
+
+ENV GOPROXY=http://proxy.golang.org
+
+WORKDIR /src/app
+
+COPY --from=frontend /src/app /src/app
+
+COPY go.mod go.sum ./
 RUN go mod download
 
-ADD . .
+COPY . .
 RUN buffalo build --static -o /bin/app
 
+# Final stage
 FROM alpine
-RUN apk add --no-cache bash
-RUN apk add --no-cache ca-certificates
+
+RUN apk add --no-cache bash ca-certificates postgresql-client
 
 WORKDIR /app
 
@@ -27,7 +36,6 @@ COPY entrypoint.sh /bin/entrypoint.sh
 RUN chmod +x /bin/entrypoint.sh
 
 ENV ADDR=0.0.0.0
-
 EXPOSE 3000
 
 CMD ["/bin/entrypoint.sh"]

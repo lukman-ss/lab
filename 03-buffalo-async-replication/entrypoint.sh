@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Cek apakah sudah ada project
 if [ ! -f /app/main.go ]; then
   echo "🌀 Cloning project dari GitHub..."
