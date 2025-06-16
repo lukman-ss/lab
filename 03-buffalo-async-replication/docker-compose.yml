@@ -61,19 +61,23 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: buffalo
+    depends_on:
+      - postgre-sync-master
     ports:
       - '3000:3000'
     networks:
       - lab-aync-net
     volumes:
-      - buffalo_data:/app
+      - .:/app
     working_dir: /app
+    environment:
+      - DATABASE_URL=postgres://postgres:example@postgre-sync-master:5432/postgres?sslmode=disable
+    command: ./entrypoint.sh
 
 volumes:
   master_data:
   slave_sync_data:
   slave_async_data:
-  buffalo_data:
 
 networks:
   lab-aync-net:

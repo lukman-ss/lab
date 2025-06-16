@@ -1,0 +1,5 @@
+create_table("messages") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("text", "string", {})
+	t.Timestamps()
+}
