@@ -9,9 +9,7 @@ WORKDIR /src/03-buffalo-async-replication
 
 # this will cache the npm install step, unless package.json changes
 ADD package.json .
-ADD yarn.lock .yarnrc.yml ./
-RUN mkdir .yarn
-COPY .yarn .yarn
+ADD yarn.lock .
 RUN yarn install
 # Copy the Go Modules manifests
 COPY go.mod go.mod
