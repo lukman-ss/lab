@@ -16,13 +16,16 @@ RUN go mod download
 COPY . .                         
 RUN buffalo build --static -o /bin/app
 
-# Final Image
+# Final stage
 FROM alpine
 RUN apk add --no-cache bash ca-certificates postgresql-client
 WORKDIR /app
+
 COPY --from=builder /bin/app /bin/app
-COPY --from=builder /src/app/entrypoint.sh /bin/entrypoint.sh   
+COPY --from=builder /src/app/entrypoint.sh /bin/entrypoint.sh
+
 RUN chmod +x /bin/entrypoint.sh
+
 ENV ADDR=0.0.0.0
 EXPOSE 3000
 CMD ["/bin/entrypoint.sh"]
