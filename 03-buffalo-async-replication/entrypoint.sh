@@ -1,7 +1,6 @@
 #!/bin/sh
 set -e
 
-# Clone ulang (kalau dijalankan tanpa tahap clone di builder)
 if [ ! -f /app/main.go ]; then
   echo "🌀 Cloning project dari GitHub..."
   git clone https://github.com/lukman-ss/lab.git /tmp/lab
@@ -21,7 +20,7 @@ done
 export DATABASE_URL=postgres://postgres:example@postgre-sync-master:5432/postgres?sslmode=disable
 
 echo "⚙️  Menjalankan migrasi..."
-/bin/app pop migrate
+buffalo pop migrate
 
 echo "🚀 Menjalankan Buffalo Dev..."
-exec /bin/app dev
+exec buffalo dev

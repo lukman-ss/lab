@@ -1,27 +1,25 @@
-# ========================
-# STAGE 1: Builder
-# ========================
-FROM golang:1.23 AS builder
+# ======================== 
+# STAGE 1: Builder 
+# ======================== 
+FROM golang:1.21 AS builder
 
-ENV CGO_ENABLED=0 \
-    GO111MODULE=on \
-    GOOS=linux \
-    GOARCH=amd64
-
+ENV GO111MODULE=on
 WORKDIR /src/app
 
-# Install Buffalo CLI
+# 🟢 Install Buffalo CLI ke /go/bin
 RUN go install github.com/gobuffalo/cli/cmd/buffalo@v0.18.14
 
-# Clone source code
-RUN git clone https://github.com/lukman-ss/lab.git /tmp/lab
-RUN cp -r /tmp/lab/03-buffalo-async-replication/. /src/app/
+# 🟢 Copy semua kode
+COPY . .
 
-# Build static binary
-RUN /go/bin/buffalo build --static --skip-assets -o /bin/app
+# 🟢 Install dep
+RUN go mod tidy
+
+# 🟢 Build Buffalo project
+RUN /go/bin/buffalo build --static --skip-assets -o /bin/buffalo
 
 # ========================
-# STAGE 2: Runtime (Ubuntu)
+# STAGE 2: Runtime
 # ========================
 FROM ubuntu:22.04
 
@@ -35,13 +33,10 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy binary dari builder
-COPY --from=builder /bin/app /bin/app
+# 🟢 Salin hasil build buffalo
+COPY --from=builder /bin/buffalo /bin/buffalo
 
-# Optional: symbolic link
-RUN ln -s /bin/app /bin/buffalo
-
-# Copy entrypoint
+# 🟢 Salin script entrypoint
 COPY entrypoint.sh /bin/entrypoint.sh
 RUN dos2unix /bin/entrypoint.sh && chmod +x /bin/entrypoint.sh
 
