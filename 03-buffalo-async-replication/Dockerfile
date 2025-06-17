@@ -1,43 +1,46 @@
-# Stage 1: Frontend
-FROM node:18 AS frontend
+# ========================
+# STAGE 1: Builder
+# ========================
+FROM golang:1.21 AS builder
+
+# 🟢 Konfigurasi agar hasil build statik dan bisa jalan di Alpine
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
+
 WORKDIR /src/app
-COPY package.json yarn.lock ./
-COPY .yarn .yarn
-COPY .yarnrc.yml ./
-RUN yarn install
 
-# Stage 2: Go Builder
-FROM golang:1.23 AS builder
-ENV GO111MODULE=on
-WORKDIR /src/app
-
-# 🟢 Salin source
-COPY --from=frontend /src/app /src/app
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-
-# 🟢 Install Buffalo CLI (binary ada di /go/bin/buffalo)
+# 🟢 Install Buffalo CLI
 RUN go install github.com/gobuffalo/cli/cmd/buffalo@v0.18.14
 
-# 🟢 Build binary app ke path berbeda
-RUN buffalo build --skip-assets -o /src/app/bin/app
+# 🟢 Copy semua source code
+COPY . .
 
-# Stage 3: Runtime
+# 🟢 Build binary statik agar tidak error "not found" di Alpine
+RUN /go/bin/buffalo build --static --skip-assets -o /bin/app
+
+
+# ========================
+# STAGE 2: Runtime
+# ========================
 FROM alpine:latest
-RUN apk add --no-cache bash ca-certificates postgresql-client git dos2unix
+
+# 🟢 Install tools penting
+RUN apk add --no-cache bash postgresql-client git ca-certificates
 
 WORKDIR /app
 
-# 🟢 Salin binary Buffalo CLI ke runtime container
-COPY --from=builder /go/bin/buffalo /bin/buffalo
+# 🟢 Salin binary dari builder
+COPY --from=builder /bin/app /bin/app
 
-# 🟢 Salin hasil build app
-COPY --from=builder /src/app/bin/app /bin/app
+# 🟢 Alias simbolik ke `buffalo`
+RUN ln -s /bin/app /bin/buffalo
 
-# 🟢 Salin entrypoint dan ubah format ke Unix
+# 🟢 Salin dan aktifkan entrypoint
 COPY entrypoint.sh /bin/entrypoint.sh
 RUN dos2unix /bin/entrypoint.sh && chmod +x /bin/entrypoint.sh
 
 EXPOSE 3000
+
 CMD ["/bin/entrypoint.sh"]
