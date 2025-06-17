@@ -1,10 +1,10 @@
-# Stage 1: Frontend (Yarn v1 Classic)
+# Stage 1: Frontend
 FROM node:18 AS frontend
 WORKDIR /src/app
 COPY package.json yarn.lock ./
 COPY .yarn .yarn
 COPY .yarnrc.yml ./
-RUN yarn set version classic && yarn install
+RUN yarn install
 
 # Stage 2: Build Buffalo App
 FROM gobuffalo/buffalo:v0.18.14 AS builder
