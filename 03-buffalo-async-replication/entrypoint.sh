@@ -23,8 +23,8 @@ export DATABASE_URL=postgres://postgres:example@postgre-sync-master:5432/postgre
 
 # 🟢 Jalankan migrasi
 echo "⚙️  Menjalankan migrasi..."
-/bin/buffalo pop migrate
+/app pop migrate
 
 # 🟢 Jalankan server buffalo
 echo "🚀 Menjalankan Buffalo Dev..."
-/bin/buffalo dev
+/app dev

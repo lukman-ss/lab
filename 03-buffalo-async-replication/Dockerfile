@@ -1,26 +1,29 @@
 # ========================
 # STAGE 1: Builder
 # ========================
-FROM golang:1.21 AS builder
+FROM golang:1.23 AS builder
 
-ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
+ENV CGO_ENABLED=0 \
+    GO111MODULE=on \
     GOOS=linux \
     GOARCH=amd64
 
 WORKDIR /src/app
 
+# 🟢 Pasang Buffalo CLI
 RUN go install github.com/gobuffalo/cli/cmd/buffalo@v0.18.14
 
+# 🟢 Copy semua kode
 COPY . .
-RUN /go/bin/buffalo build --static --skip-assets -o /bin/app
+
+# 🟢 Build langsung pake go build statik, bukan buffalo
+RUN go build -o /bin/app
 
 # ========================
-# STAGE 2: Runtime (Ubuntu)
+# STAGE 2: Runtime Ubuntu
 # ========================
 FROM ubuntu:22.04
 
-# Install tools
 RUN apt-get update && apt-get install -y \
     bash \
     postgresql-client \
@@ -38,5 +41,4 @@ COPY entrypoint.sh /bin/entrypoint.sh
 RUN dos2unix /bin/entrypoint.sh && chmod +x /bin/entrypoint.sh
 
 EXPOSE 3000
-
 CMD ["/bin/entrypoint.sh"]
