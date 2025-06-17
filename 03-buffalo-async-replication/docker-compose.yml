@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   postgre-sync-master:
     image: bitnami/postgresql:14
@@ -65,9 +67,6 @@ services:
       - '3000:3000'
     networks:
       - lab-aync-net
-    volumes:
-      - .:/app
-    working_dir: /app
     environment:
       - DATABASE_URL=postgres://postgres:example@postgre-sync-master:5432/postgres?sslmode=disable
     command: /bin/entrypoint.sh
@@ -80,4 +79,3 @@ volumes:
 networks:
   lab-aync-net:
     driver: bridge
-
