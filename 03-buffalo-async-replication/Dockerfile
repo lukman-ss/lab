@@ -26,7 +26,7 @@ RUN buffalo build --skip-assets -o /bin/app  # Tanpa --static agar tidak error C
 # Stage 3: Final Runtime
 FROM alpine:latest
 # Install tool yang diperlukan + dos2unix untuk perbaikan format shell script
-RUN apk add --no-cache bash ca-certificates postgresql-client dos2unix
+RUN apk add --no-cache bash ca-certificates postgresql-client dos2unix git 
 
 WORKDIR /app
 
