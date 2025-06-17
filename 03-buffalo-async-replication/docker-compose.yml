@@ -69,10 +69,10 @@ services:
       - lab-aync-net
     environment:
       - DATABASE_URL=postgres://postgres:example@postgre-sync-master:5432/postgres?sslmode=disable
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
     command: /bin/entrypoint.sh
-    tty: true              # ✅ agar container gak langsung exit
-    stdin_open: true       # ✅ agar bisa interaktif (debug pakai sh)
-    restart: unless-stopped  # ✅ restart otomatis kalau crash
 
 volumes:
   master_data:

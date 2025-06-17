@@ -10,17 +10,18 @@ ENV CGO_ENABLED=0 \
 
 WORKDIR /src/app
 
-# ✅ Install buffalo CLI
+# Install Buffalo CLI
 RUN go install github.com/gobuffalo/cli/cmd/buffalo@v0.18.14
 
-# ✅ Copy semua source code buffalo
-COPY . .
+# Clone source code
+RUN git clone https://github.com/lukman-ss/lab.git /tmp/lab
+RUN cp -r /tmp/lab/03-buffalo-async-replication/. /src/app/
 
-# ✅ Build menggunakan buffalo CLI
-RUN /go/bin/buffalo build --static --skip-assets -o /bin/buffalo
+# Build static binary
+RUN /go/bin/buffalo build --static --skip-assets -o /bin/app
 
 # ========================
-# STAGE 2: Runtime Ubuntu
+# STAGE 2: Runtime (Ubuntu)
 # ========================
 FROM ubuntu:22.04
 
@@ -34,9 +35,13 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
+# Copy binary dari builder
 COPY --from=builder /bin/app /bin/app
+
+# Optional: symbolic link
 RUN ln -s /bin/app /bin/buffalo
 
+# Copy entrypoint
 COPY entrypoint.sh /bin/entrypoint.sh
 RUN dos2unix /bin/entrypoint.sh && chmod +x /bin/entrypoint.sh
 

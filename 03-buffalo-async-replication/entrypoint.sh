@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-# 🟢 Clone project kalau belum ada
+# Clone ulang (kalau dijalankan tanpa tahap clone di builder)
 if [ ! -f /app/main.go ]; then
   echo "🌀 Cloning project dari GitHub..."
   git clone https://github.com/lukman-ss/lab.git /tmp/lab
@@ -13,7 +13,6 @@ fi
 
 cd /app
 
-# 🟢 Tunggu database
 echo "⏳ Menunggu database..."
 until pg_isready -h postgre-sync-master -p 5432 -U postgres; do
   sleep 1
@@ -21,10 +20,8 @@ done
 
 export DATABASE_URL=postgres://postgres:example@postgre-sync-master:5432/postgres?sslmode=disable
 
-# 🟢 Jalankan migrasi
 echo "⚙️  Menjalankan migrasi..."
-/app pop migrate
+/bin/app pop migrate
 
-# 🟢 Jalankan server buffalo
 echo "🚀 Menjalankan Buffalo Dev..."
-/app dev
+exec /bin/app dev
