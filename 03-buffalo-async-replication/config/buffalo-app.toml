@@ -1,4 +1,4 @@
-name = "03-buffalo-async-replication"
+name = "buffalo-async-replication"
 bin = "bin"
 vcs = "git"
 with_pop = true

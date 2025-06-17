@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"03-buffalo-async-replication/actions"
+	"buffalo-async-replication/actions"
 )
 
 // main is the starting point for your Buffalo application.

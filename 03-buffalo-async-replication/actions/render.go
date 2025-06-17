@@ -1,8 +1,8 @@
 package actions
 
 import (
-	"03-buffalo-async-replication/public"
-	"03-buffalo-async-replication/templates"
+	"buffalo-async-replication/public"
+	"buffalo-async-replication/templates"
 
 	"github.com/gobuffalo/buffalo/render"
 )

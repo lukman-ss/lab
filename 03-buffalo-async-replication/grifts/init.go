@@ -1,7 +1,7 @@
 package grifts
 
 import (
-	"03-buffalo-async-replication/actions"
+	"buffalo-async-replication/actions"
 
 	"github.com/gobuffalo/buffalo"
 )

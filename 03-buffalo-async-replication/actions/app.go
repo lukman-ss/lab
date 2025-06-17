@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"sync"
 
-	"03-buffalo-async-replication/locales"
-	"03-buffalo-async-replication/models"
-	"03-buffalo-async-replication/public"
+	"buffalo-async-replication/locales"
+	"buffalo-async-replication/models"
+	"buffalo-async-replication/public"
 
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo-pop/v3/pop/popmw"

@@ -1,4 +1,4 @@
-module github.com/lukman-ss/03-buffalo-async-replication
+module buffalo-async-replication
 
 go 1.18
 
