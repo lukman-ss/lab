@@ -10,14 +10,14 @@ ENV CGO_ENABLED=0 \
 
 WORKDIR /src/app
 
-# 🟢 Pasang Buffalo CLI
+# ✅ Install buffalo CLI
 RUN go install github.com/gobuffalo/cli/cmd/buffalo@v0.18.14
 
-# 🟢 Copy semua kode
+# ✅ Copy semua source code buffalo
 COPY . .
 
-# 🟢 Build langsung pake go build statik, bukan buffalo
-RUN go build -o /bin/app
+# ✅ Build menggunakan buffalo CLI
+RUN /go/bin/buffalo build --static --skip-assets -o /bin/buffalo
 
 # ========================
 # STAGE 2: Runtime Ubuntu
