@@ -8,7 +8,7 @@ RUN yarn install
 
 # Stage 2: Go Builder
 FROM golang:1.23 AS builder
-ENV CGO_ENABLED=0 GO111MODULE=on
+ENV GO111MODULE=on
 WORKDIR /src/app
 
 COPY --from=frontend /src/app /src/app
@@ -17,7 +17,7 @@ RUN go mod download
 COPY . .
 
 RUN go install github.com/gobuffalo/cli/cmd/buffalo@v0.18.14
-RUN buffalo build --skip-assets --static -o /bin/app
+RUN buffalo build --skip-assets -o /bin/app  # <- tanpa --static
 
 # Final stage: Runtime
 FROM alpine:latest
