@@ -1,8 +1,6 @@
 # Stage 1: Frontend
 FROM node:18 AS frontend
 WORKDIR /src/app
-
-# Salin file konfigurasi dan install dependencies frontend
 COPY package.json yarn.lock ./
 COPY .yarn .yarn
 COPY .yarnrc.yml ./
@@ -13,28 +11,33 @@ FROM golang:1.23 AS builder
 ENV GO111MODULE=on
 WORKDIR /src/app
 
-# Salin hasil dari frontend dan mod files
 COPY --from=frontend /src/app /src/app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-# Install Buffalo CLI dan build aplikasi
+# 🟢 Install Buffalo CLI
 RUN go install github.com/gobuffalo/cli/cmd/buffalo@v0.18.14
-RUN buffalo build --skip-assets -o /bin/app  # Tanpa --static agar tidak error CGO
 
-# Stage 3: Final Runtime
+# 🟢 Build app binary tanpa --static agar tidak error CGO
+RUN buffalo build --skip-assets -o /bin/app
+
+# Final stage: Runtime
 FROM alpine:latest
-# Install tool yang diperlukan + dos2unix untuk perbaikan format shell script
-RUN apk add --no-cache bash ca-certificates postgresql-client dos2unix git 
+
+# 🟢 Tambah `git` agar bisa clone di entrypoint.sh
+RUN apk add --no-cache bash ca-certificates postgresql-client git dos2unix
 
 WORKDIR /app
 
-# Copy binary hasil build dan entrypoint script
+# 🟢 Copy binary ke /bin/app
 COPY --from=builder /bin/app /bin/app
-COPY entrypoint.sh /bin/entrypoint.sh
 
-# Ubah format Windows ke Unix (CRLF -> LF) dan beri permission eksekusi
+# 🟢 Simbolik link ke /bin/buffalo agar entrypoint.sh bisa pakai 'buffalo'
+RUN ln -s /bin/app /bin/buffalo
+
+# 🟢 Copy entrypoint.sh dan konversi format ke Unix
+COPY entrypoint.sh /bin/entrypoint.sh
 RUN dos2unix /bin/entrypoint.sh && chmod +x /bin/entrypoint.sh
 
 EXPOSE 3000
