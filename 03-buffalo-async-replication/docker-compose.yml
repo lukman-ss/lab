@@ -70,6 +70,9 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:example@postgre-sync-master:5432/postgres?sslmode=disable
     command: /bin/entrypoint.sh
+    tty: true              # ✅ agar container gak langsung exit
+    stdin_open: true       # ✅ agar bisa interaktif (debug pakai sh)
+    restart: unless-stopped  # ✅ restart otomatis kalau crash
 
 volumes:
   master_data:
