@@ -2,6 +2,8 @@
 
 ![New Resource](new-resource.png)
 
+![Coolify Wordpress Mysql](coolify-wordpress-mysql.png)
+
 Coolify adalah platform self-hosted untuk DevOps deployment. Kamu bisa install ini di WSL2 (Windows Subsystem for Linux) tanpa harus pakai server VPS.
 
 ## Prasyarat
