@@ -23,4 +23,4 @@ echo "⚙️  Menjalankan migrasi..."
 buffalo pop migrate
 
 echo "🚀 Menjalankan Buffalo Dev..."
-exec buffalo dev
+exec buffalo serve --addr 0.0.0.0:3000
