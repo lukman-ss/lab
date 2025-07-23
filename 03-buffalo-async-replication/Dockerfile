@@ -1,7 +1,7 @@
 # ======================== 
 # STAGE 1: Builder 
 # ======================== 
-FROM golang:1.21 AS builder
+FROM golang:1.24 AS builder
 
 ENV GO111MODULE=on
 WORKDIR /usr/src/app
