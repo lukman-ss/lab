@@ -13,7 +13,7 @@ fi
 cd /app
 
 echo "⏳ Menunggu database..."
-until pg_isready -h postgre-sync-master -p 5432 -U postgres; do
+until pg_isready -h postgre-sync-master -p 5435 -U postgres; do
   sleep 1
 done
 
