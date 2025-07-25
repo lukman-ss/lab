@@ -13,3 +13,5 @@ This repository is a personal sandbox for exploring various IT architecture patt
 | [`03-buffalo-async-replication`](./03-buffalo-async-replication) | Buffalo app using Golang with sync & async PostgreSQL replication |
 | [`04-coolify`](./04-coolify) | Install Coolify on WSL2 (Ubuntu) for self-hosted DevOps deployment on Windows |
 | [`05-statamic`](./05-statamic/my-cms) | Statamic 4 CMS with blog-ready starter kit, markdown content, TailwindCSS, Alpine.js, and optional PostgreSQL via eloquent driver |
+| [`06-ai-cms`](.06-ai-cms) | AI-powered CMS engine for generating articles and content using prompt-driven automation. Supports Markdown formatting, keyword optimization, and multi-platform publishing. |
+| [`07-robust-code-golang`](.07-robust-code-golang/robust_code) | Implements robust software architecture in Golang using the Buffalo framework. Features include layered structure (Service, Repository, Request, Test), clean error handling, and maintainable practices. |
