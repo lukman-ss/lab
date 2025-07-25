@@ -1,0 +1,2 @@
+#!/bin/zsh
+export PATH="C:\Program Files\PhpWebStudy-Data\app\static-go-1.24.5:C:/Program Files/PhpWebStudy-Data/app/static-go-1.24.5/bin:$PATH" #FlyEnv-ID-E7CSzPCRAQpEAOZxBBF5Es3nS4i8dw4z

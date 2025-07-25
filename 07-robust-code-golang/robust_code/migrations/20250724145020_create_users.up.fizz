@@ -1,0 +1,9 @@
+create_table("users") {
+  t.Column("id", "uuid", {primary: true})
+  t.Column("name", "string", {})
+  t.Column("email", "string", {size: 255, unique: true})
+  t.Column("email_verified_at", "timestamp", {null: true})
+  t.Column("password", "string", {})
+  t.Column("remember_token", "string", {size: 100, null: true})
+  t.Timestamps()
+}

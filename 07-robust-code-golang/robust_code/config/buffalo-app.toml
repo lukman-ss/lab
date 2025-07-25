@@ -1,0 +1,34 @@
+# -----------------------------------------------------------------------------
+# Buffalo application configuration
+# -----------------------------------------------------------------------------
+
+name = "robust-code"
+bin = "bin\\robust-code"
+vcs = "git"
+
+# ORM choice
+with_pop = true
+with_sqlite = false
+
+# Dependency management (dep/glide/mod)
+with_dep = false
+
+# Front-end tooling (we disable these for API-only)
+with_webpack = false
+with_nodejs  = false
+with_yarn    = false
+
+# Container and task runners
+with_docker = true
+with_grifts = true
+
+# Mode flags
+as_web = false
+as_api = true
+
+# -----------------------------------------------------------------------------
+# Advanced build options
+# -----------------------------------------------------------------------------
+[build]
+# Skip webpack/yarn asset compilation entirely
+disableWebpack = true
