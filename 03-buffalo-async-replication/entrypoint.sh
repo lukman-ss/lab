@@ -13,7 +13,7 @@ fi
 cd /app
 
 echo "⏳ Menunggu database..."
-until pg_isready -h postgre-sync-master -p 5432 -U postgres; do
+until pg_isready -h postgre-sync-master -p 5435 -U postgres; do
   sleep 1
 done
 
@@ -23,4 +23,4 @@ echo "⚙️  Menjalankan migrasi..."
 buffalo pop migrate
 
 echo "🚀 Menjalankan Buffalo Dev..."
-exec buffalo dev
+exec buffalo serve --addr 0.0.0.0:3000

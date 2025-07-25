@@ -1,10 +1,10 @@
 # ======================== 
 # STAGE 1: Builder 
 # ======================== 
-FROM golang:1.21 AS builder
+FROM golang:1.24 AS builder
 
 ENV GO111MODULE=on
-WORKDIR /src/app
+WORKDIR /usr/src/app
 
 # 🟢 Install Buffalo CLI ke /go/bin
 RUN go install github.com/gobuffalo/cli/cmd/buffalo@v0.18.14
@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install -y \
     dos2unix && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # 🟢 Salin hasil build buffalo
 COPY --from=builder /bin/buffalo /bin/buffalo
