@@ -1,0 +1,4 @@
+# conf/base/parameters.yml
+model_path: "yolov8n-seg.pt"
+scroll_threshold: 20.0
+scroll_sensitivity: 5.0
