@@ -1,101 +1,142 @@
-# op-detector
+# OP-Detector
+![Sample Output](image.png) 
+A Kedro-based computer vision pipeline to detect One Piece anime characters using a custom dataset scraped from DuckDuckGo.
 
-[![Powered by Kedro](https://img.shields.io/badge/powered_by-kedro-ffc900?logo=kedro)](https://kedro.org)
-
-## Overview
-
-This is your new Kedro project, which was generated using `kedro 1.0.0`.
-
-Take a look at the [Kedro documentation](https://docs.kedro.org) to get started.
-
-## Rules and guidelines
-
-In order to get the best out of the template:
-
-* Don't remove any lines from the `.gitignore` file we provide
-* Make sure your results can be reproduced by following a data engineering convention
-* Don't commit data to your repository
-* Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
-
-## How to install dependencies
-
-Declare any dependencies in `requirements.txt` for `pip` installation.
-
-To install them, run:
+## Project Structure
 
 ```
-pip install -r requirements.txt
+op-detector/
+├── conf/
+│   ├── base/
+│   │   ├── catalog.yml
+│   │   ├── parameters.yml
+│   │   ├── parameters_data_engineering.yml
+│   │   ├── parameters_train.yml
+│   │   └── parameters_detect.yml
+│   └── local/
+├── data/
+│   ├── 01_raw/
+│   │   └── images/                 # Raw images scraped by data_engineering
+│   ├── 06_models/
+│   │   └── op_character_resnet.pth # Trained model checkpoint
+│   └── detect/
+│       └── test.jpg               # Sample image for inference
+├── src/op_detector/
+│   ├── pipelines/
+│   │   ├── data_engineering/
+│   │   │   ├── nodes.py
+│   │   │   └── pipeline.py
+│   │   ├── train/
+│   │   │   ├── nodes.py
+│   │   │   └── pipeline.py
+│   │   └── detect/
+│   │       ├── nodes.py
+│   │       └── pipeline.py
+│   └── settings.py
+├── requirements.txt
+└── README.md
 ```
 
-## How to run your Kedro pipeline
+## Setup
 
-You can run your Kedro project with:
+1. **Clone the repo** and navigate in:
 
-```
-kedro run
-```
+   ```bash
+   git clone https://github.com/lukman-ss/lab.git
+   cd 10-op-detector/op-detector
+   ```
 
-## How to test your Kedro project
+2. **Create and activate a virtual environment**:
 
-Have a look at the file `tests/test_run.py` for instructions on how to write your tests. You can run your tests as follows:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
 
-```
-pytest
-```
+3. **Install dependencies**:
 
-You can configure the coverage threshold in your project's `pyproject.toml` file under the `[tool.coverage.report]` section.
+   ```bash
+   pip install -r requirements.txt
+   ```
 
+4. **Ensure SSL certificates** (macOS only):
 
-## Project dependencies
+   ```bash
+   pip install certifi
+   ```
 
-To see and update the dependency requirements for your project use `requirements.txt`. You can install the project requirements with `pip install -r requirements.txt`.
+## Pipelines
 
-[Further information about project dependencies](https://docs.kedro.org/en/stable/kedro_project_setup/dependencies.html#project-specific-dependencies)
+### 1. Data Engineering (Scrape Images)
 
-## How to work with Kedro and notebooks
+Pull images for each One Piece character using DuckDuckGo.
 
-> Note: Using `kedro jupyter` or `kedro ipython` to run your notebook provides these variables in scope: `context`, 'session', `catalog`, and `pipelines`.
->
-> Jupyter, JupyterLab, and IPython are already included in the project requirements by default, so once you have run `pip install -r requirements.txt` you will not need to take any extra steps before you use them.
-
-### Jupyter
-To use Jupyter notebooks in your Kedro project, you need to install Jupyter:
-
-```
-pip install jupyter
-```
-
-After installing Jupyter, you can start a local notebook server:
-
-```
-kedro jupyter notebook
+```bash
+kedro run --pipeline=data_engineering
 ```
 
-### JupyterLab
-To use JupyterLab, you need to install it:
+* Configured via `conf/base/parameters_data_engineering.yml`:
 
+  ```yaml
+  characters:
+    - Monkey D. Luffy
+    - Roronoa Zoro
+    # ...
+  max_results: 200
+  raw_images_dir: "data/01_raw/images"
+  ```
+
+### 2. Train (Model Training)
+
+Train a ResNet18 classifier on the scraped images.
+
+```bash
+kedro run --pipeline=train
 ```
-pip install jupyterlab
+
+* Configured via `conf/base/parameters_train.yml`:
+
+  ```yaml
+  train:
+    raw_images_dir: "data/01_raw/images"
+    model_output:   "data/06_models/op_character_resnet.pth"
+    epochs:         5
+  ```
+
+### 3. Detect (Inference)
+
+Run inference on a single image to predict the character.
+
+```bash
+kedro run --pipeline=detect --params="detect.image_path=data/detect/test.jpg"
 ```
 
-You can also start JupyterLab:
+* Configured via `conf/base/parameters_detect.yml`:
 
-```
-kedro jupyter lab
-```
+  ```yaml
+  detect:
+    image_path: "data/detect/test.jpg"
+  ```
 
-### IPython
-And if you want to run an IPython session:
+## Adding New Characters
 
-```
-kedro ipython
-```
+1. Update `characters` list in `conf/base/parameters_data_engineering.yml`.
+2. Re-run the data engineering pipeline:
 
-### How to ignore notebook output cells in `git`
-To automatically strip out all output cell contents before committing to `git`, you can use tools like [`nbstripout`](https://github.com/kynan/nbstripout). For example, you can add a hook in `.git/config` with `nbstripout --install`. This will run `nbstripout` before anything is committed to `git`.
+   ```bash
+   kedro run --pipeline=data_engineering
+   ```
+3. Re-run training to include new classes:
 
-> *Note:* Your output cells will be retained locally.
+   ```bash
+   kedro run --pipeline=train
+   ```
 
-## Package your Kedro project
+## Notes
 
-[Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/tutorial/package_a_project.html)
+* **Partial prototype**: You can train and test on whatever subset of data you have—empty folders are skipped automatically.
+* **Lazy imports**: DuckDuckGo scraping is only imported when running the scrape pipeline, so inference runs in isolation.
+
+---
+
+Happy detecting! 🚀

@@ -1,142 +1,26 @@
-# OP-Detector
-![Sample Output](image.png) 
-A Kedro-based computer vision pipeline to detect One Piece anime characters using a custom dataset scraped from DuckDuckGo.
+# What is this for?
 
-## Project Structure
+This folder should be used to store configuration files used by Kedro or by separate tools.
 
-```
-op-detector/
-├── conf/
-│   ├── base/
-│   │   ├── catalog.yml
-│   │   ├── parameters.yml
-│   │   ├── parameters_data_engineering.yml
-│   │   ├── parameters_train.yml
-│   │   └── parameters_detect.yml
-│   └── local/
-├── data/
-│   ├── 01_raw/
-│   │   └── images/                 # Raw images scraped by data_engineering
-│   ├── 06_models/
-│   │   └── op_character_resnet.pth # Trained model checkpoint
-│   └── detect/
-│       └── test.jpg               # Sample image for inference
-├── src/op_detector/
-│   ├── pipelines/
-│   │   ├── data_engineering/
-│   │   │   ├── nodes.py
-│   │   │   └── pipeline.py
-│   │   ├── train/
-│   │   │   ├── nodes.py
-│   │   │   └── pipeline.py
-│   │   └── detect/
-│   │       ├── nodes.py
-│   │       └── pipeline.py
-│   └── settings.py
-├── requirements.txt
-└── README.md
-```
+This file can be used to provide users with instructions for how to reproduce local configuration with their own credentials. You can edit the file however you like, but you may wish to retain the information below and add your own section in the [Instructions](#Instructions) section.
 
-## Setup
+## Local configuration
 
-1. **Clone the repo** and navigate in:
+The `local` folder should be used for configuration that is either user-specific (e.g. IDE configuration) or protected (e.g. security keys).
 
-   ```bash
-   git clone https://github.com/lukman-ss/lab.git
-   cd 10-op-detector/op-detector
-   ```
+> *Note:* Please do not check in any local configuration to version control.
 
-2. **Create and activate a virtual environment**:
+## Base configuration
 
-   ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate
-   ```
+The `base` folder is for shared configuration, such as non-sensitive and project-related configuration that may be shared across team members.
 
-3. **Install dependencies**:
+WARNING: Please do not put access credentials in the base configuration folder.
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Instructions
 
-4. **Ensure SSL certificates** (macOS only):
 
-   ```bash
-   pip install certifi
-   ```
 
-## Pipelines
 
-### 1. Data Engineering (Scrape Images)
+## Need help?
 
-Pull images for each One Piece character using DuckDuckGo.
-
-```bash
-kedro run --pipeline=data_engineering
-```
-
-* Configured via `conf/base/parameters_data_engineering.yml`:
-
-  ```yaml
-  characters:
-    - Monkey D. Luffy
-    - Roronoa Zoro
-    # ...
-  max_results: 200
-  raw_images_dir: "data/01_raw/images"
-  ```
-
-### 2. Train (Model Training)
-
-Train a ResNet18 classifier on the scraped images.
-
-```bash
-kedro run --pipeline=train
-```
-
-* Configured via `conf/base/parameters_train.yml`:
-
-  ```yaml
-  train:
-    raw_images_dir: "data/01_raw/images"
-    model_output:   "data/06_models/op_character_resnet.pth"
-    epochs:         5
-  ```
-
-### 3. Detect (Inference)
-
-Run inference on a single image to predict the character.
-
-```bash
-kedro run --pipeline=detect --params="detect.image_path=data/detect/test.jpg"
-```
-
-* Configured via `conf/base/parameters_detect.yml`:
-
-  ```yaml
-  detect:
-    image_path: "data/detect/test.jpg"
-  ```
-
-## Adding New Characters
-
-1. Update `characters` list in `conf/base/parameters_data_engineering.yml`.
-2. Re-run the data engineering pipeline:
-
-   ```bash
-   kedro run --pipeline=data_engineering
-   ```
-3. Re-run training to include new classes:
-
-   ```bash
-   kedro run --pipeline=train
-   ```
-
-## Notes
-
-* **Partial prototype**: You can train and test on whatever subset of data you have—empty folders are skipped automatically.
-* **Lazy imports**: DuckDuckGo scraping is only imported when running the scrape pipeline, so inference runs in isolation.
-
----
-
-Happy detecting! 🚀
+[Find out more about configuration from the Kedro documentation](https://docs.kedro.org/en/stable/kedro_project_setup/configuration.html).
