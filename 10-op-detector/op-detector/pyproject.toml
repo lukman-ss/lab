@@ -1,0 +1,33 @@
+[build-system]
+requires = [ "setuptools",]
+build-backend = "setuptools.build_meta"
+
+[project]
+requires-python = ">=3.9"
+name = "op_detector"
+readme = "README.md"
+dynamic = [ "version",]
+dependencies = [ "ipython>=8.10", "jupyterlab>=3.0", "notebook", "kedro~=1.0.0",]
+
+[project.scripts]
+op-detector = "op_detector.__main__:main"
+
+[tool.kedro]
+package_name = "op_detector"
+project_name = "op-detector"
+kedro_init_version = "1.0.0"
+tools = "['None']"
+example_pipeline = "False"
+source_dir = "src"
+
+[project.entry-points."kedro.hooks"]
+
+[tool.setuptools.dynamic.version]
+attr = "op_detector.__version__"
+
+[tool.setuptools.packages.find]
+where = [ "src",]
+namespaces = false
+
+[tool.kedro_telemetry]
+project_id = "90074b6355c245958f7a5ee7458090db"
