@@ -1,0 +1,33 @@
+[build-system]
+requires = [ "setuptools",]
+build-backend = "setuptools.build_meta"
+
+[project]
+requires-python = ">=3.9"
+name = "anti_fatigue"
+readme = "README.md"
+dynamic = [ "version",]
+dependencies = [ "ipython>=8.10", "jupyterlab>=3.0", "notebook", "kedro~=1.0.0",]
+
+[project.scripts]
+anti-fatigue = "anti_fatigue.__main__:main"
+
+[tool.kedro]
+package_name = "anti_fatigue"
+project_name = "anti-fatigue"
+kedro_init_version = "1.0.0"
+tools = "['None']"
+example_pipeline = "False"
+source_dir = "src"
+
+[project.entry-points."kedro.hooks"]
+
+[tool.setuptools.dynamic.version]
+attr = "anti_fatigue.__version__"
+
+[tool.setuptools.packages.find]
+where = [ "src",]
+namespaces = false
+
+[tool.kedro_telemetry]
+project_id = "5972350d78134889a77f70e2d6e12ac8"

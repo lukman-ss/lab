@@ -1,0 +1,11 @@
+# This is a boilerplate parameters config generated for pipeline 'train'
+# using Kedro 1.0.0.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/1.0.0/configuration/parameters.html
+train:
+  raw_images_dir: "data/01_raw/images"
+  model_output:   "data/06_models/fatigue_model.pth"
+  epochs:         10
+  batch_size:     32
+  learning_rate:  0.0001

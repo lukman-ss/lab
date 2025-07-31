@@ -1,0 +1,13 @@
+detect:
+  video_source:        0       # your default camera
+  eye_closed_frames:   3
+  yawn_frames:         3
+  scale_factor_eye:    1.1
+  min_neighbors_eye:   5
+  scale_factor_smile:  1.7
+  min_neighbors_smile: 20
+
+  # Recording settings
+  record_dir:          "data/04_recordings"
+  pre_buffer_secs:     2       # seconds to keep before a yawn
+  post_record_secs:    3       # seconds to record after triggering
