@@ -52,8 +52,8 @@ anti-fatigue/
 ## ⚙️ Installation
 
 ```bash
-git clone https://github.com/your-org/anti-fatigue-detector.git
-cd anti-fatigue-detector
+git clone [https://github.com/your-org/anti-fatigue-detector.git](https://github.com/lukman-ss/lab.git)
+cd 11-kedro-anti-fatigue/anti-fatigue
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
