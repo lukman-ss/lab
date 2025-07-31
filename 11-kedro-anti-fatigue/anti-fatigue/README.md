@@ -10,35 +10,41 @@ A Kedro-based computer-vision pipeline to detect signs of fatigue (yawns & “ku
 
 ## 📁 Project Structure
 
-.
+```bash
+anti-fatigue/
 ├── conf/
-│   └── base/
-│       ├── parameters\_scraping.yml
-│       ├── parameters\_train.yml
-│       └── parameters\_detect.yml
+│   ├── base/
+│   │   ├── catalog.yml
+│   │   ├── parameters.yml               # global defaults (if any)
+│   │   ├── parameters_scraping.yml      # events & scraping settings
+│   │   ├── parameters_train.yml         # training settings
+│   │   └── parameters_detect.yml        # live detection & recording settings
+│   └── local/                           # override for local dev
 ├── data/
-│   ├── 01\_raw/
-│   │   └── images/
-│   │       ├── yawn/
-│   │       └── kucek\_mata/
-│   ├── 06\_models/
-│   │   └── fatigue\_model.pth
-│   └── 04\_recordings/
-│       └── yawn\_<timestamp>.avi
+│   ├── 01_raw/
+│   │   └── images/                      # scraped images
+│   │       └── yawn/
+│   ├── 06_models/
+│   │   └── fatigue_model.pth           # trained checkpoint
+│   └── 04_recordings/                  # auto-recorded yawn clips
+│       └── yawn_<timestamp>.avi
 ├── src/
-│   └── anti\_fatigue\_detector/
+│   └── anti_fatigue_detector/
 │       ├── pipelines/
 │       │   ├── scraping/
-│       │   │   ├── nodes.py
+│       │   │   ├── nodes.py            # scrape_images()
 │       │   │   └── pipeline.py
 │       │   ├── train/
-│       │   │   ├── nodes.py
+│       │   │   ├── nodes.py            # train_model()
 │       │   │   └── pipeline.py
 │       │   └── detect/
-│       │       ├── nodes.py
+│       │       ├── nodes.py            # detect_and_record()
 │       │       └── pipeline.py
-│       └── settings.py
-└── requirements.txt
+│       └── settings.py                 # register_pipelines()
+├── requirements.txt                    # minimal, unpinned deps
+└── README.md                           # project overview & usage
+```
+
 
 
 ---
