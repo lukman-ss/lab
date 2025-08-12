@@ -19,3 +19,5 @@ This repository is a personal sandbox for exploring various IT architecture patt
 | [`09-kedro-pilot-cv`](./09-kedro-pilot-cv/kedro-pilot-cv)                | Kedro Pilot CV: a Kedro-based YOLOv8 segmentation demo that maps vertical hand movement to scroll events. |
 | [`10-op-detector/op-detector`](./10-op-detector/op-detector)    | One Piece character detector: a Kedro pipeline that scrapes images and fine-tunes ResNet18 to recognize Straw Hat Pirates.       |
 | [`11-kedro-anti-fatigue/anti-fatigue`](./11-kedro-anti-fatigue/anti-fatigue) | Anti-Fatigue detector: a Kedro pipeline for live blink & yawn detection via OpenCV Haar cascades, automatically recording yawn clips. |
+| [`12-feathersjs-chat/feathers-chat`](./12-feathersjs-chat/feathers-chat) | FeathersJS chat API with REST + Socket.IO, in-memory storage |
+| [`13-springboot-api/product-api`](./13-springboot-api/product-api) | Spring Boot product CRUD API with in-memory storage |
