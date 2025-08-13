@@ -1,0 +1,45 @@
+server:
+  port: 8081
+
+app:
+  topics:
+    paymentRequested: payments.requested
+    paymentCompleted: payments.completed
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    # === PRODUCER: kirim PaymentResultEvent ===
+    producer:
+      acks: all
+      retries: 10
+      properties:
+        enable.idempotence: true
+        spring.json.add.type.headers: false   # JANGAN kirim type headers
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    # === CONSUMER: terima PaymentRequestedEvent ===
+    consumer:
+      group-id: payment-service              # boleh ganti ke payment-service-v2 saat retest
+      auto-offset-reset: earliest
+
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.techthinkhub.payment.dto.PaymentRequestedEvent
+        spring.json.trusted.packages: com.techthinkhub.payment.dto
+
+    listener:
+      ack-mode: record
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

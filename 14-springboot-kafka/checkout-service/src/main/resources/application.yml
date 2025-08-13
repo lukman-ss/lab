@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+app:
+  topics:
+    paymentRequested: payments.requested
+    paymentCompleted: payments.completed
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    # === PRODUCER: kirim PaymentRequestedEvent ===
+    producer:
+      acks: all
+      retries: 10
+      properties:
+        enable.idempotence: true
+        spring.json.add.type.headers: false   # JANGAN kirim type headers
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    # === CONSUMER: terima PaymentResultEvent ===
+    consumer:
+      group-id: checkout-service             # boleh ganti ke checkout-service-v2 saat retest
+      auto-offset-reset: earliest
+
+      # Gunakan ErrorHandlingDeserializer -> delegasikan ke JsonDeserializer
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.techthinkhub.checkout.dto.PaymentResultEvent
+        spring.json.trusted.packages: com.techthinkhub.checkout.dto
+
+    listener:
+      ack-mode: record
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
